@@ -14,11 +14,14 @@ pipeline {
                 sh '''
                 ssh sn312623@34.29.195.253 << 'EOF'
                   set -e
-                  pkill node || true
-                  rm -rf backendvm
-                  git clone https://github.com/shailu-3126/backendvm.git
+                  cd ~
+                  if [ ! -d backendvm ]; then
+                    git clone https://github.com/shailu-3126/backendvm.git
+                  else
+                    cd backendvm && git pull
+                  fi
                   cd backendvm
-                  node -v
+                  pkill node || true
                   nohup node app.js > backend.log 2>&1 &
                 EOF
                 '''
@@ -26,3 +29,4 @@ pipeline {
         }
     }
 }
+
