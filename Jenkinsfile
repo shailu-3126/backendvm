@@ -18,6 +18,7 @@ pipeline {
                   rm -rf backendvm
                   git clone https://github.com/shailu-3126/backendvm.git
                   cd backendvm
+                  node -v
                   nohup node app.js > backend.log 2>&1 &
                 EOF
                 '''
