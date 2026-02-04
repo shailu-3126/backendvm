@@ -3,29 +3,23 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                echo 'Checking out source code'
                 checkout scm
             }
         }
 
-        stage('Install Runtime') {
+        stage('Deploy Backend to backend-vm') {
             steps {
-                echo 'Installing Node.js'
                 sh '''
-                  curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-                  sudo apt-get install -y nodejs
-                '''
-            }
-        }
-
-        stage('Deploy Backend') {
-            steps {
-                echo 'Deploying backend application'
-                sh '''
+                ssh sn312623@34.29.195.253 << 'EOF'
+                  set -e
                   pkill node || true
+                  rm -rf backendvm
+                  git clone https://github.com/shailu-3126/backendvm.git
+                  cd backendvm
                   nohup node app.js > backend.log 2>&1 &
+                EOF
                 '''
             }
         }
